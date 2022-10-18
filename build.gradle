@@ -1,0 +1,60 @@
+
+buildscript {
+    repositories {
+        mavenCentral()
+        maven { url "https://plugins.gradle.org/m2/" }
+    }
+    dependencies {
+        classpath "gradle.plugin.org.inferred:gradle-processors:$gradleProcessorsVersion"
+    }
+}
+
+plugins {
+    id "org.owasp.dependencycheck" version "7.2.1"
+    id 'jacoco'
+    id 'java'
+}
+
+apply plugin: 'org.owasp.dependencycheck'
+
+repositories {
+    mavenCentral()
+    maven { url "https://plugins.gradle.org/m2/" }
+}
+
+allprojects {
+    repositories {
+        mavenCentral()
+        maven { url "https://plugins.gradle.org/m2/" }
+    }
+    // Java Version
+    sourceCompatibility = "1.$jreMinorVersion"
+    targetCompatibility = "1.$jreMinorVersion"
+}
+
+subprojects {
+    apply plugin: 'org.inferred.processors'
+    apply plugin: 'org.owasp.dependencycheck'
+}
+
+task codeCoverageReport(type: JacocoReport) {
+    dependsOn subprojects.collect { it.tasks.withType(Test) }
+
+    // Gather execution data from all subprojects
+    executionData fileTree(project.rootDir.absolutePath).include("**/.out/jacoco/*.exec")
+
+    def classDirs = []
+    def sourceDirs = []
+    for (p in allprojects) {
+        classDirs << file("${p.projectDir}/.out/classes/java/main")
+        sourceDirs << file("${p.projectDir}/src/main/java")
+    }
+    classDirectories.from(classDirs)
+    sourceDirectories.from(sourceDirs)
+
+    reports {
+        xml.enabled true
+        html.enabled true
+        csv.enabled false
+    }
+}

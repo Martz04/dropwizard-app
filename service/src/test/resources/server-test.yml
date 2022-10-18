@@ -1,0 +1,34 @@
+logging:
+  level: INFO
+
+  appenders:
+    - type: console
+      threshold: ALL
+      timeZone: IST
+
+server:
+  type: simple
+  applicationContextPath: /
+  adminContextPath: /admin
+  connector:
+    port: 8080
+    type: http
+
+db:
+  name: user-db
+  connection:
+    driverClass: org.h2.Driver
+    user: ${db_user:-user}
+    password: ${db_pass:-pass}
+    url: ${db_url:-jdbc:h2:mem:testdb}
+
+    properties:
+      charSet: UTF-8
+      currentSchema: SYSTEM
+    maxWaitForConnection: 1s
+    validationQuery: "select 1 from dual"
+    validationQueryTimeout: 3s
+    minSize: 8
+    maxSize: 32
+
+appName : MarioServices

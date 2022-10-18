@@ -1,0 +1,76 @@
+plugins {
+    id "org.barfuin.gradle.jacocolog" version "$jacocologPluginVersion"
+    id 'java-library'
+    id 'jacoco'
+    id 'com.github.johnrengelman.shadow' version "$shadowJarPluginVersion"
+}
+
+dependencies {
+    implementation project(':api')
+
+    implementation "io.dropwizard:dropwizard-core"
+    implementation 'io.dropwizard:dropwizard-jdbi3'
+    implementation 'io.dropwizard:dropwizard-migrations'
+    implementation "io.dropwizard:dropwizard-forms"
+
+    implementation "com.h2database:h2:$h2Version"
+
+    compileOnly "org.projectlombok:lombok:$lombokVersion"
+    annotationProcessor "org.projectlombok:lombok:$lombokVersion"
+    testCompileOnly "org.projectlombok:lombok:$lombokVersion"
+    testAnnotationProcessor "org.projectlombok:lombok:$lombokVersion"
+
+    testImplementation('io.dropwizard:dropwizard-testing') {
+        exclude group: 'junit', module: 'junit'
+    }
+    testImplementation "org.junit.jupiter:junit-jupiter-api:$junitjupiterVersion"
+    testRuntimeOnly "org.junit.jupiter:junit-jupiter-engine"
+    testRuntimeOnly "org.junit.jupiter:junit-jupiter-params"
+    testImplementation "org.mockito:mockito-junit-jupiter:$mockitoVersion"
+    testImplementation "org.junit.jupiter:junit-jupiter-params:$junitjupiterVersion"
+    testImplementation "org.assertj:assertj-core:$assertjcoreVersion"
+    testImplementation "com.github.tomakehurst:wiremock-standalone:$wireMockVersion"
+    testImplementation ("org.glassfish.jersey.test-framework.providers:jersey-test-framework-provider-grizzly2:$jerseyVersion") {
+        exclude group: 'javax.servlet', module: 'javax.servlet-api'
+        exclude group: 'junit', module: 'junit'
+    }
+}
+
+//Jar Configuration
+jar {
+    manifest {
+        attributes 'Main-Class': 'com.mario.HelloWorldApplication'
+    }
+}
+
+shadowJar {
+    mergeServiceFiles()
+}
+
+tasks.build.dependsOn tasks.shadowJar
+
+// Tests
+test {
+    useJUnitPlatform {
+    }
+    finalizedBy jacocoTestReport // report is always generated after tests run
+}
+
+jacocoTestReport {
+    dependsOn test // tests are required to run before generating the report
+    reports {
+        xml.enabled true
+    }
+}
+
+jacocoTestCoverageVerification {
+    violationRules {
+        rule {
+            limit {
+                minimum = 0.1
+            }
+        }
+    }
+}
+
+check.dependsOn jacocoTestCoverageVerification

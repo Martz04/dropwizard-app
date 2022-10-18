@@ -1,0 +1,37 @@
+plugins {
+    id 'java-library'
+    id 'jacoco'
+}
+
+dependencies {
+    api platform("io.dropwizard:dropwizard-bom:$dropwizardVersion")
+    implementation "javax.ws.rs:javax.ws.rs-api:$jaxrsVersion"
+    implementation "javax.validation:validation-api:$validationApiVersion"
+    implementation "org.hibernate.validator:hibernate-validator:$hibernateValidatorVersion"
+    implementation "io.dropwizard:dropwizard-forms"
+
+    compileOnly "org.projectlombok:lombok:$lombokVersion"
+    annotationProcessor "org.projectlombok:lombok:$lombokVersion"
+    testCompileOnly "org.projectlombok:lombok:$lombokVersion"
+    testAnnotationProcessor "org.projectlombok:lombok:$lombokVersion"
+
+    implementation "com.fasterxml.jackson.core:jackson-databind:$jacksonVersion"
+
+    testImplementation('io.dropwizard:dropwizard-testing') {
+        exclude group: 'junit', module: 'junit'
+    }
+
+    testImplementation "org.junit.jupiter:junit-jupiter-api:$junitjupiterVersion"
+    testRuntimeOnly "org.junit.jupiter:junit-jupiter-engine"
+    testRuntimeOnly "org.junit.jupiter:junit-jupiter-params"
+    testImplementation "org.mockito:mockito-junit-jupiter:$mockitoVersion"
+    testImplementation "org.junit.jupiter:junit-jupiter-params:$junitjupiterVersion"
+    testImplementation "org.assertj:assertj-core:$assertjcoreVersion"
+    //testImplementation "com.github.tomakehurst:wiremock-standalone:$wireMockVersion"
+
+}
+
+test {
+    useJUnitPlatform {
+    }
+}
