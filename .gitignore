@@ -6,3 +6,8 @@ build
 .idea
 api/build
 service/build
+presentation/node_modules
+presentation/css
+presentation/dist
+presentation/js
+presentation/plugin

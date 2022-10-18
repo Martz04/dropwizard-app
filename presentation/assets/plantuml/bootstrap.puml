@@ -1,0 +1,31 @@
+@startuml
+class io.dropwizard.Application<T extends Configuration> {
+ run(String[] arguments)
+}
+class io.dropwizard.Configuration
+
+class com.mario.MyApplication {
+ + initialize(bootstrap)
+ + run(configuration, environment)
+}
+
+class io.dropwizard.Bootstrap {
+ application: Application
+ configuredBundles: List
+ commands: List
+}
+
+note right of io.dropwizard.Bootstrap : Pre-start environment \nHas everythin for dropwizard to run
+note left of com.mario.MyApplication::initialize
+ Used to add <b>bundles</b> to our application.
+end note
+note left of com.mario.MyApplication::run
+ Used to <b>register Beans</b> for DI.
+end note
+
+io.dropwizard.Application  --up|> io.dropwizard.Configuration
+
+com.mario.MyApplication --up|> io.dropwizard.Application
+io.dropwizard.Application - io.dropwizard.Bootstrap: > creates
+
+@enduml
