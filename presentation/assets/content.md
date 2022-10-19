@@ -113,7 +113,6 @@ Run method is called automatically by Bootrstrap
 
 
 
-
 ## REST Endpoints
 
 
@@ -173,6 +172,70 @@ public class UserResourceImpl implements UserResource {
     }
     ...
 ```
+
+
+
+## Testing
+
+
+<!-- .slide: data-transition="fade" -->
+Using `DropwizardExtensionsSupport` we can spin up a server for testing
+```java[]
+@ExtendWith(DropwizardExtensionsSupport.class)
+public class HelloWorldV1Test {
+    ...
+}
+```
+
+
+<!-- .slide: data-transition="fade" -->
+Then create an `app` using a custom `TestApplication`
+```java[4|6-7|13-14|17]
+@ExtendWith(DropwizardExtensionsSupport.class)
+public class HelloWorldV1Test {
+
+    private static final String TEST_CONFIG_PATH = ResourceHelpers.resourceFilePath("server-test.yml");
+
+    private static final DropwizardAppExtension<HelloWorldConfiguration> app =
+            new DropwizardAppExtension<>(HelloWorldTestApplication.class, TEST_CONFIG_PATH);
+
+    final static String LOCAL_HOST = "http://localhost:";
+
+    @Test
+    public void testHello() {
+        Response response = app.client().target(LOCAL_HOST + app.getLocalPort() + "/v1/hello/mario")
+                .request().get();
+
+        var helloWorldResponse = response.readEntity(HelloWorldResponse.class);
+        assertThat(helloWorldResponse.getMessage()).isEqualTo("Hello mario");
+    }
+}
+```
+
+
+<!-- .slide: data-transition="fade" -->
+Then create an `app` using a custom `TestApplication`
+```java[1|7-10]
+public class HelloWorldTestApplication extends HelloWorldApplication{
+
+    @Override
+    protected HelloWorldJdbiBundle<HelloWorldConfiguration> databaseBundle() {
+        return new HelloWorldJdbiBundle<HelloWorldConfiguration>() {
+
+            @Override
+            public void run(HelloWorldConfiguration config, Environment environment) throws Exception {
+                // Override DB connection with stub
+            }
+
+            @Override
+            public DatabaseConfiguration getDatabaseConfiguration(HelloWorldConfiguration config) {
+                return config.getDatabaseConfiguration();
+            }
+        };
+    }
+}
+```
+
 
 
 ## Thanks!
