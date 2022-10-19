@@ -239,4 +239,6 @@ public class HelloWorldTestApplication extends HelloWorldApplication{
 
 
 ## Thanks!
-Source code [Github](http://)
+Mario Gonzalez <!-- .element: class="fragment" data-fragment-index="1" -->
+mgonzalez@griddynamics.com 
+Source code [Github](https://github.com/Martz04/dropwizard-app)
