@@ -8,7 +8,7 @@
 
 		<link rel="stylesheet" href="dist/reset.css">
 		<link rel="stylesheet" href="dist/reveal.css">
-		<link rel="stylesheet" href="dist/theme/league.css">
+		<link rel="stylesheet" href="dist/theme/night.css">
 
 		<!-- Theme used for syntax highlighted code -->
 		<link rel="stylesheet" href="plugin/highlight/monokai.css">
@@ -17,7 +17,18 @@
 		<div class="reveal">
 			<div class="slides">
 				<!-- Use external markdown resource, separate slides by three newlines; vertical slides by two newlines -->
-        <section data-markdown="assets/content.md" data-separator="^\n\n\n" data-separator-vertical="^\n\n"></section>
+				<style>
+					.reveal section p {
+						display: inline-block !important;
+						font-size: 0.6em !important;
+						line-height: 1.2em !important;
+						vertical-align: top !important;
+					}
+					.reveal section pre code {
+						font-size: 0.6em !important;
+					}
+				</style>
+        		<section data-markdown="assets/content.md" data-separator="^\n\n\n" data-separator-vertical="^\n\n"></section>
 			</div>
 		</div>
 
@@ -31,6 +42,7 @@
 			// - https://revealjs.com/config/
 			Reveal.initialize({
 				hash: true,
+				autoAnimate: true,
 				// Learn about plugins: https://revealjs.com/plugins/
 				plugins: [ RevealMarkdown, RevealHighlight, RevealNotes ]
 			});

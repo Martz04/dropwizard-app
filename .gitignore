@@ -6,8 +6,5 @@ build
 .idea
 api/build
 service/build
+service/.DS_Store
 presentation/node_modules
-presentation/css
-presentation/dist
-presentation/js
-presentation/plugin
